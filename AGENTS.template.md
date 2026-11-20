@@ -95,6 +95,8 @@ apply its override file. The override wins where they conflict.
 | Community skill | Override |
 | --- | --- |
 | `odoo-git` | [pos-agent-kit/overrides/odoo-git.md](pos-agent-kit/overrides/odoo-git.md) |
+| `odoo-guidelines` | [pos-agent-kit/overrides/comments.md](pos-agent-kit/overrides/comments.md) |
+| `odoo-web-guidelines` | [pos-agent-kit/overrides/comments.md](pos-agent-kit/overrides/comments.md) |
 
 ## Precedence
 

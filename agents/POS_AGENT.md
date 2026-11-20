@@ -51,6 +51,11 @@ references for the files being changed. Resolve these links relative to this fil
 - When the user explicitly requests test changes, also follow
   [POS_TEST_AGENT.md](POS_TEST_AGENT.md) and its testing sources.
 
+For any code you write, also apply the
+[comments and docstrings overrides](../overrides/comments.md): no comments or
+docstrings that restate the code. In new comments and strings, write
+`PoS`, not `POS` (see [odoo-pos](../skills/odoo-pos/SKILL.md#writing-pos)).
+
 Read only the skills and referenced sections relevant to the task. Follow the
 user's explicit instructions when they differ from a skill, including the rule
 that development must not add test cases unless specifically requested.

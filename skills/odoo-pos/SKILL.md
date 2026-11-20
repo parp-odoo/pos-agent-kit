@@ -121,6 +121,24 @@ which addon owns each extension and which details depend on configuration or
 version. If a link in the flow is unverified, say so instead of filling it from
 memory. Keep a requested summary short; expand only the relevant flow.
 
+## Writing "PoS"
+
+When you add text that names the Point of Sale, write it as `PoS` (lowercase
+`o`), not `POS` or `Pos`:
+
+- New code comments and docstrings: `# keep the PoS session open`.
+- New user-facing strings, labels and messages:
+  `_("Open the PoS to continue")`.
+
+Leave alone:
+
+- Identifiers and technical names: `pos.order`, `pos_config`, `PosStore`,
+  `point_of_sale`, XML ids, CSS classes.
+- Existing strings, unless the task changes them anyway. Rewording a
+  translatable string breaks its translations, and a cosmetic rename does
+  not belong in a stable branch.
+- Commit messages: follow `odoo-git` (module names such as `point_of_sale`).
+
 ## Related skills
 
 This skill maps behavior; use the matching house rules when developing or

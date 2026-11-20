@@ -37,6 +37,8 @@ test cases.
   necessary behavior that the existing case cannot meaningfully verify.
 - Follow the existing POS test conventions and applicable Odoo Python or web
   testing guidelines.
+- Apply the [comments and docstrings overrides](../overrides/comments.md) to
+  test code too: no docstrings or step-by-step comments that restate the test.
 
 ## Repairing a failing test
 
