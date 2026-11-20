@@ -9,7 +9,6 @@ set -euo pipefail
 KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT=""
 HANDLE="<odoo_handle>"
-GITHUB_LOGIN="<github_login>"
 WORKTREE_ROOT=""
 
 usage() {
@@ -18,7 +17,6 @@ Usage: $0 [options]
 
   --project DIR        project root (default: parent of the kit, $(dirname "$KIT_DIR"))
   --handle HANDLE      Odoo handle used in branch names (e.g. abcd)
-  --github LOGIN       GitHub login (e.g. abcd-odoo)
   --worktree-root DIR  where new worktrees go (default: <project>/../odoo-git-worktrees)
   -h, --help
 EOF
@@ -28,7 +26,6 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --project) PROJECT="$2"; shift 2 ;;
         --handle) HANDLE="$2"; shift 2 ;;
-        --github) GITHUB_LOGIN="$2"; shift 2 ;;
         --worktree-root) WORKTREE_ROOT="$2"; shift 2 ;;
         -h|--help) usage; exit 0 ;;
         *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
@@ -55,6 +52,5 @@ fi
 sed -e "s#<project_root_value>#$PROJECT#" \
     -e "s#<worktree_root_value>#$WORKTREE_ROOT#" \
     -e "s#<odoo_handle_value>#$HANDLE#" \
-    -e "s#<github_login_value>#$GITHUB_LOGIN#" \
     "$KIT_DIR/AGENTS.template.md" > "$PROJECT/AGENTS.md"
 echo "Wrote $PROJECT/AGENTS.md; review its Settings section, then restart your agent session."

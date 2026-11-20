@@ -26,7 +26,7 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
 2. Write the project `AGENTS.md` with your settings:
 
    ```bash
-   pos-agent-kit/install.sh --handle <odoo-handle> --github <github-login> \
+   pos-agent-kit/install.sh --handle <odoo-handle> \
        --worktree-root ~/odoo-git-worktrees
    ```
 

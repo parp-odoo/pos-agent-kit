@@ -16,7 +16,6 @@ Other kit files refer to these values by name.
 | `project_root` | `<project_root_value>` |
 | `worktree_root` | `<worktree_root_value>` |
 | `odoo_handle` | `<odoo_handle_value>` |
-| `github_login` | `<github_login_value>` |
 
 ## Where the instructions live
 
