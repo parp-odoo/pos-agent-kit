@@ -8,7 +8,7 @@ set -euo pipefail
 
 KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT=""
-HANDLE="<odoo_handle>"
+HANDLE=""
 WORKTREE_ROOT=""
 
 usage() {
@@ -16,7 +16,8 @@ usage() {
 Usage: $0 [options]
 
   --project DIR        project root (default: parent of the kit, $(dirname "$KIT_DIR"))
-  --handle HANDLE      Odoo handle used in branch names (e.g. abcd)
+  --handle HANDLE      Odoo handle used in branch names (default: from your
+                       @odoo.com git email, else asked)
   --worktree-root DIR  where new worktrees go (default: <project>/../odoo-git-worktrees)
   -h, --help
 EOF
@@ -34,6 +35,19 @@ done
 
 PROJECT="$(cd "${PROJECT:-$(dirname "$KIT_DIR")}" && pwd)"
 WORKTREE_ROOT="${WORKTREE_ROOT:-$(dirname "$PROJECT")/odoo-git-worktrees}"
+
+# Odoo handle: the local part of an @odoo.com git email, else ask.
+if [ -z "$HANDLE" ]; then
+    email="$(git -C "$PROJECT/community" config user.email 2>/dev/null || true)"
+    case "$email" in *@odoo.com) HANDLE="${email%@odoo.com}" ;; esac
+fi
+if [ -z "$HANDLE" ] && [ -t 0 ]; then
+    read -r -p "Your Odoo handle (used in branch names, e.g. abcd): " HANDLE
+fi
+if [ -z "$HANDLE" ]; then
+    HANDLE="<odoo_handle>"
+    echo "!! No Odoo handle found; set odoo_handle in AGENTS.md by hand." >&2
+fi
 
 if [ "$(dirname "$KIT_DIR")" != "$PROJECT" ] || [ "$(basename "$KIT_DIR")" != "pos-agent-kit" ]; then
     echo "!! The kit must be at $PROJECT/pos-agent-kit (links depend on it)." >&2
@@ -53,4 +67,5 @@ sed -e "s#<project_root_value>#$PROJECT#" \
     -e "s#<worktree_root_value>#$WORKTREE_ROOT#" \
     -e "s#<odoo_handle_value>#$HANDLE#" \
     "$KIT_DIR/AGENTS.template.md" > "$PROJECT/AGENTS.md"
-echo "Wrote $PROJECT/AGENTS.md; review its Settings section, then restart your agent session."
+echo "Wrote $PROJECT/AGENTS.md (handle: $HANDLE, worktrees: $WORKTREE_ROOT)."
+echo "Restart your agent session to use it."

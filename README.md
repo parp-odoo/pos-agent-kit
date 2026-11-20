@@ -20,18 +20,19 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
 1. Clone the kit into the Odoo project root, next to `community/`:
 
    ```bash
-   git clone <kit-repo-url> pos-agent-kit
+   git clone https://github.com/parp-odoo/pos-agent-kit
    ```
 
 2. Write the project `AGENTS.md` with your settings:
 
    ```bash
-   pos-agent-kit/install.sh --handle <odoo-handle> \
-       --worktree-root ~/odoo-git-worktrees
+   pos-agent-kit/install.sh --handle <your-odoo-handle>   # e.g. --handle parp
    ```
 
-   If an `AGENTS.md` already exists, it is left alone; merge
-   `AGENTS.template.md` into it by hand.
+   > The handle is used in branch names, e.g. `master-my-fix-parp`.
+
+   An existing `AGENTS.md` is never overwritten (merge `AGENTS.template.md`
+   into it by hand); run `install.sh --help` for the other options.
 
 3. Restart the agent session.
 
