@@ -1,0 +1,5 @@
+# Personal review history fetched from GitHub (niche-review data)
+scripts/pr_review_comments/data/
+__pycache__/
+*.pyc
+.env
