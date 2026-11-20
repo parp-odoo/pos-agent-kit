@@ -12,7 +12,7 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
 | `agents/` | `POS_AGENT`, `POS_TEST_AGENT`, `WORKTREE_AGENT` |
 | `skills/odoo-pos/` | POS frontend/backend flow tracing |
 | `skills/niche-review/` | Review against comments you received before |
-| `overrides/` | Your changes to community skills (`odoo-git.md`) |
+| `overrides/` | Your changes to community skills (`odoo-git.md`, `comments.md`) |
 | `scripts/pr_review_comments/` | Fetch/query PR review comments for niche-review |
 
 ## Setup
@@ -44,7 +44,7 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
 
 ## Notes
 
-- Do not edit `community/skills/`; put changes in `overrides/<skill>.md` and
+- Do not edit `community/skills/`; put changes in `overrides/` and
   list them in `AGENTS.template.md`.
 - The template is not named `AGENTS.md` so harnesses don't load its
   placeholders as instructions.
