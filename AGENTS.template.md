@@ -64,8 +64,11 @@ none of these files.
   audit of existing code.
 
 When a skill is listed here, read its `SKILL.md` from this path yourself; do not
-expect the harness to have loaded it. Use other skills offered by the harness
-(outside these folders) only when the user asks for them by name.
+expect the harness to have loaded it. The same skills may also be offered as
+`/commands` (linked from `~/.claude/skills/` by `install.sh --skills`); they are
+the same files, and a skill invoked that way still gets its override below.
+Use other skills offered by the harness (outside these folders) only when the
+user asks for them by name.
 
 ## Local agent directories
 

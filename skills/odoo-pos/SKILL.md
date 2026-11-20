@@ -110,7 +110,7 @@ feature through every step.
   changes, cache restoration, retries, and duplicate handling at both ends.
   Bus notifications are a separate update path from an RPC response.
 - Prefer existing POS extension points. Follow the user's scope rule in
-  [POS_AGENT.md](../../agents/POS_AGENT.md) before changing shared or base code.
+  POS_AGENT.md (`pos-agent-kit/agents/POS_AGENT.md`) before changing shared or base code.
 
 ## Explain the result
 
@@ -141,19 +141,22 @@ Leave alone:
 
 ## Related skills
 
+Paths are from the project root (the directory holding `AGENTS.md`), so they
+work however this skill was loaded.
+
 This skill maps behavior; use the matching house rules when developing or
 reviewing it:
 
-- [odoo-guidelines](../../../community/skills/odoo-guidelines/SKILL.md) for Python and addon code
+- odoo-guidelines (`community/skills/odoo-guidelines/SKILL.md`) for Python and addon code
   outside `static/`.
-- [odoo-web-guidelines](../../../community/skills/odoo-web-guidelines/SKILL.md) for JavaScript, Owl,
+- odoo-web-guidelines (`community/skills/odoo-web-guidelines/SKILL.md`) for JavaScript, Owl,
   SCSS, and frontend tests.
-- [odoo-security](../../../community/skills/odoo-security/SKILL.md) when assessing access rights,
+- odoo-security (`community/skills/odoo-security/SKILL.md`) when assessing access rights,
   routes, RPC inputs, `sudo()`, or other security-sensitive behavior.
-- [odoo-review](../../../community/skills/odoo-review/SKILL.md) for code reviews.
-- [odoo-git](../../../community/skills/odoo-git/SKILL.md) for commits and pull requests, with the
-  [odoo-git overrides](../../overrides/odoo-git.md).
-- [POS_TEST_AGENT.md](../../agents/POS_TEST_AGENT.md) when explicitly asked to write
+- odoo-review (`community/skills/odoo-review/SKILL.md`) for code reviews.
+- odoo-git (`community/skills/odoo-git/SKILL.md`) for commits and pull requests, with the
+  odoo-git overrides (`pos-agent-kit/overrides/odoo-git.md`).
+- POS_TEST_AGENT.md (`pos-agent-kit/agents/POS_TEST_AGENT.md`) when explicitly asked to write
   or update tests; it defines HOOT/Python/tour selection and coverage scope.
 
 Read only the sources relevant to the task. Architecture exploration does not

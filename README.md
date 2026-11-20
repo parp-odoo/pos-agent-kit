@@ -26,13 +26,17 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
 2. Write the project `AGENTS.md` with your settings:
 
    ```bash
-   pos-agent-kit/install.sh --handle <your-odoo-handle>   # e.g. --handle parp
+   pos-agent-kit/install.sh --handle <your-odoo-handle> --skills   # e.g. --handle parp
    ```
 
    > The handle is used in branch names, e.g. `master-my-fix-parp`.
 
-   An existing `AGENTS.md` is never overwritten (merge `AGENTS.template.md`
-   into it by hand); run `install.sh --help` for the other options.
+   `--skills` makes the kit and community skills available as `/niche-review`,
+   `/odoo-pos`, `/odoo-review`, ... in Claude Code, by linking them into
+   `~/.claude/skills/` (your home, not the project; nothing is copied). Re-run
+   it after pulling `community/` to pick up new skills. An existing `AGENTS.md`
+   is never overwritten (merge `AGENTS.template.md` into it by hand); run
+   `install.sh --help` for the other options.
 
 3. Restart the agent session.
 
