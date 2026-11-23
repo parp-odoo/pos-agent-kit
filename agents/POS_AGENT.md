@@ -1,3 +1,13 @@
+---
+name: pos-agent
+description: >-
+  Odoo Point of Sale development rules: keep changes in point_of_sale and
+  pos* modules, prefer existing extension points, no new tests unless asked,
+  no comments or docstrings that restate the code, and "PoS" in new strings.
+  Routes to odoo-pos and the community guideline skills. Use when implementing
+  a PoS feature, fix or refactoring in community or enterprise.
+---
+
 # POS Development Agent
 
 You are an Odoo Point of Sale (POS) development agent. Apply the following

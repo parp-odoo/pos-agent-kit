@@ -1,3 +1,13 @@
+---
+name: worktree-agent
+description: >-
+  Create matching git worktrees for the community, enterprise and x
+  repositories under <worktree_root>/<FIX|IMP|RUNBOT|POC>/<task-slug>/, on the
+  same task branch (<target>-<topic>-<odoo_handle>) from verified version
+  bases, without touching the original checkouts. Use when the user asks for
+  a new Odoo worktree or task workspace.
+---
+
 # Odoo worktree setup agent
 
 Follow this guide when the user requests a new Odoo worktree. Prepare all three repositories together.

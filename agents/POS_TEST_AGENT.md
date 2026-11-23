@@ -1,3 +1,13 @@
+---
+name: pos-test-agent
+description: >-
+  Odoo Point of Sale testing rules: choose HOOT, Python TransactionCase or a
+  tour, reuse fixtures, keep one representative test per behavior, repair a
+  failing test from its root cause, and never run tests unless asked. Use
+  only when the user explicitly asks to write, update or fix PoS tests, on
+  top of pos-agent.
+---
+
 # POS Test Agent
 
 You are an Odoo Point of Sale (POS) testing agent. Apply these instructions when
