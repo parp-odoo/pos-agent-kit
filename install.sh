@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Install pos-agent-kit into an Odoo project.
 #
-# Only writes <project>/AGENTS.md (never overwrites an existing one). Skills are
-# read in place from community/skills/ and pos-agent-kit/skills/: nothing is
-# copied or linked into .agents/, .claude/ or .codex/.
+# 1. Optionally links skills into ~/.claude/skills (--skills) for /commands.
+# 2. Writes <project>/AGENTS.md (never overwrites an existing one).
+# 3. Asks whether to set up niche-review (GitHub token, fetch review comments).
+# Skills are read in place from community/skills/ and pos-agent-kit/skills/;
+# the project gets no .agents/, .claude/ or .codex/ directory.
 set -euo pipefail
 
 KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -11,6 +13,7 @@ PROJECT=""
 HANDLE=""
 WORKTREE_ROOT=""
 LINK_SKILLS=0
+NICHE=""   # "" = ask, 1 = yes, 0 = no
 SKILLS_DIR="$HOME/.claude/skills"
 
 usage() {
@@ -24,6 +27,8 @@ Usage: $0 [options]
   --skills             also link kit and community skills into SKILLS_DIR so
                        they work as /skill-name commands (nothing is copied)
   --skills-dir DIR     user-level skills folder (default: ~/.claude/skills)
+  --niche / --no-niche set up niche-review (asks for a GitHub token and fetches
+                       your PR review comments) without / instead of asking
   -h, --help
 EOF
 }
@@ -35,6 +40,8 @@ while [ $# -gt 0 ]; do
         --worktree-root) WORKTREE_ROOT="$2"; shift 2 ;;
         --skills) LINK_SKILLS=1; shift ;;
         --skills-dir) SKILLS_DIR="$2"; LINK_SKILLS=1; shift 2 ;;
+        --niche) NICHE=1; shift ;;
+        --no-niche) NICHE=0; shift ;;
         -h|--help) usage; exit 0 ;;
         *) echo "Unknown option: $1" >&2; usage >&2; exit 2 ;;
     esac
@@ -76,25 +83,78 @@ if [ "$LINK_SKILLS" = 1 ]; then
     done
 fi
 
-if [ -e "$PROJECT/AGENTS.md" ]; then
-    echo "$PROJECT/AGENTS.md exists, left untouched. Merge $KIT_DIR/AGENTS.template.md into it by hand."
-    exit 0
-fi
-# Odoo handle: the local part of an @odoo.com git email, else ask.
-if [ -z "$HANDLE" ]; then
-    email="$(git -C "$PROJECT/community" config user.email 2>/dev/null || true)"
-    case "$email" in *@odoo.com) HANDLE="${email%@odoo.com}" ;; esac
-fi
-if [ -z "$HANDLE" ] && [ -t 0 ]; then
-    read -r -p "Your Odoo handle (used in branch names, e.g. abcd): " HANDLE
-fi
-if [ -z "$HANDLE" ]; then
-    HANDLE="<odoo_handle>"
-    echo "!! No Odoo handle found; set odoo_handle in AGENTS.md by hand." >&2
-fi
-sed -e "s#<project_root_value>#$PROJECT#" \
-    -e "s#<worktree_root_value>#$WORKTREE_ROOT#" \
-    -e "s#<odoo_handle_value>#$HANDLE#" \
-    "$KIT_DIR/AGENTS.template.md" > "$PROJECT/AGENTS.md"
-echo "Wrote $PROJECT/AGENTS.md (handle: $HANDLE, worktrees: $WORKTREE_ROOT)."
-echo "Restart your agent session to use it."
+write_agents_md() {
+    if [ -e "$PROJECT/AGENTS.md" ]; then
+        echo "$PROJECT/AGENTS.md exists, left untouched. Merge $KIT_DIR/AGENTS.template.md into it by hand."
+        return
+    fi
+    # Odoo handle: the local part of an @odoo.com git email, else ask.
+    if [ -z "$HANDLE" ]; then
+        local email
+        email="$(git -C "$PROJECT/community" config user.email 2>/dev/null || true)"
+        case "$email" in *@odoo.com) HANDLE="${email%@odoo.com}" ;; esac
+    fi
+    if [ -z "$HANDLE" ] && [ -t 0 ]; then
+        read -r -p "Your Odoo handle (used in branch names, e.g. abcd): " HANDLE
+    fi
+    if [ -z "$HANDLE" ]; then
+        HANDLE="<odoo_handle>"
+        echo "!! No Odoo handle found; set odoo_handle in AGENTS.md by hand." >&2
+    fi
+    sed -e "s#<project_root_value>#$PROJECT#" \
+        -e "s#<worktree_root_value>#$WORKTREE_ROOT#" \
+        -e "s#<odoo_handle_value>#$HANDLE#" \
+        "$KIT_DIR/AGENTS.template.md" > "$PROJECT/AGENTS.md"
+    echo "Wrote $PROJECT/AGENTS.md (handle: $HANDLE, worktrees: $WORKTREE_ROOT)."
+}
+
+# niche-review: fetch the user's PR review comments from GitHub. Interactive
+# only; the token is read hidden and never passed on a command line.
+setup_niche_review() {
+    [ "$NICHE" = 0 ] && return
+    if [ ! -t 0 ]; then
+        [ "$NICHE" = 1 ] && echo "!! --niche needs an interactive terminal; skipped." >&2
+        return
+    fi
+    local answer token="" env_file="$PROJECT/.env"
+    if [ "$NICHE" != 1 ]; then
+        echo
+        read -r -p "Set up niche-review and fetch your PR review comments from GitHub? [y/N] " answer
+        case "$answer" in [yY]|[yY][eE][sS]) ;; *) echo "Skipped niche-review setup."; return ;; esac
+    fi
+
+    if [ -f "$env_file" ] && grep -Eq '^\s*(export\s+)?GITHUB_TOKEN\s*=\s*\S' "$env_file"; then
+        read -r -p "Use the GITHUB_TOKEN already in $env_file? [Y/n] " answer
+        case "$answer" in [nN]|[nN][oO]) ;; *) token="__from_env_file__" ;; esac
+    fi
+    if [ -z "$token" ]; then
+        echo "A GitHub token with read access to pull requests is needed"
+        echo "(fine-grained: 'Pull requests: Read' on odoo/odoo, odoo/enterprise, odoo/upgrade; classic: 'repo')."
+        read -r -s -p "GitHub token (input hidden): " token; echo
+        if [ -z "$token" ]; then echo "No token given; skipped niche-review setup."; return; fi
+        read -r -p "Save it to $env_file for later syncs? [Y/n] " answer
+        case "$answer" in
+            [nN]|[nN][oO]) ;;
+            *)
+                touch "$env_file"; chmod 600 "$env_file"
+                local tmp; tmp="$(mktemp)"
+                grep -Ev '^\s*(export\s+)?GITHUB_TOKEN\s*=' "$env_file" > "$tmp" || true
+                printf 'GITHUB_TOKEN=%s\n' "$token" >> "$tmp"
+                cat "$tmp" > "$env_file"; rm -f "$tmp"
+                echo "Saved to $env_file (mode 600)." ;;
+        esac
+    fi
+
+    echo "Fetching your review comments (the first run can take a few minutes)..."
+    local fetch="$KIT_DIR/scripts/pr_review_comments/fetch_pr_comments.py"
+    if [ "$token" = "__from_env_file__" ]; then
+        python3 "$fetch" || { echo "!! Fetch failed; re-run: python3 $fetch" >&2; return; }
+    else
+        GITHUB_TOKEN="$token" python3 "$fetch" || { echo "!! Fetch failed; re-run: python3 $fetch" >&2; return; }
+    fi
+    echo "niche-review is ready. Later, refresh with: python3 $fetch"
+}
+
+write_agents_md
+setup_niche_review
+echo "Restart your agent session to use the kit."

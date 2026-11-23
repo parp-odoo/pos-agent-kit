@@ -38,14 +38,16 @@ the community Odoo skills in `community/skills/` (read in place, never copied).
    is never overwritten (merge `AGENTS.template.md` into it by hand); run
    `install.sh --help` for the other options.
 
-3. Restart the agent session.
-
-4. Optional, for niche-review: put `GITHUB_TOKEN=...` in `~/odoo/.env`, then
-   fetch your review comments:
+3. niche-review: the installer then asks whether to set it up `[y/N]`. On
+   `y`, paste a GitHub token with read access to pull requests (input is
+   hidden); it is saved to `.env` in the project root and your review comments
+   are fetched. Refresh them later with:
 
    ```bash
    python3 pos-agent-kit/scripts/pr_review_comments/fetch_pr_comments.py
    ```
+
+4. Restart the agent session.
 
 ## Notes
 
