@@ -22,6 +22,19 @@ Replaces the bug-fix bullet in *Body*:
   resulting behavior. A fix message without the reported steps is not finished.
   (Do not refer to the test to show which cases the fix covers.)
 
+Addition to *Body*, for a bug or error that an earlier commit introduced:
+
+- Name the commit that introduced it in the body. Give its hash only, never
+  its title after it: `Since commit 1a2b3c4d5e6f, ...`, not
+  `Since commit 1a2b3c4d5e6f ([FIX] point_of_sale: ...), ...`.
+- Say in a single sentence why that commit causes the break. Do not go deeper
+  into its history or its changes.
+- After writing the message, give the user a GitHub link to each commit it
+  names, in your reply and not in the commit message:
+  `https://github.com/<owner>/<repo>/commit/<full hash>`, with the owner and
+  repository of the Odoo repository the commit lives in (for example
+  `odoo/odoo` or `odoo/enterprise`).
+
 ## Trailers
 
 Replaces the first bullet in *Trailers*:
@@ -50,3 +63,12 @@ Addition to *Branches and pull requests*:
   create one. Open it ready for review only when the user explicitly asks for
   that (an open, non-draft or ready-for-review PR). Do not mark a draft ready
   for review (`gh pr ready`) unless the user asks.
+- Links in the PR description, added without being asked:
+  - For each commit the commit message names as the cause of the bug, link
+    the hash in the description:
+    `[1a2b3c4d5e6f](https://github.com/<owner>/<repo>/commit/<full hash>)`.
+  - For a `runbot-<id>` trailer, put its link in the footer of the
+    description: `runbot-<id>: https://runbot.odoo.com/odoo/error/<id>`.
+  - Leave `task-` and `opw-` references as plain text, without a link.
+  The commit message itself keeps the plain hash and the plain `runbot-<id>`
+  trailer.
