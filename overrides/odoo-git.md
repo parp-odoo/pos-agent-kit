@@ -41,3 +41,12 @@ Addition to the branch-name bullet:
   `AGENTS.md`: `<target>-<topic>-<odoo_handle>`, for example
   `master-bookshop-portal-<odoo_handle>`. Do not ask for the handle when it is
   set there.
+
+## Pull requests
+
+Addition to *Branches and pull requests*:
+
+- Always open a pull request as a draft (`gh pr create --draft`) when asked to
+  create one. Open it ready for review only when the user explicitly asks for
+  that (an open, non-draft or ready-for-review PR). Do not mark a draft ready
+  for review (`gh pr ready`) unless the user asks.
