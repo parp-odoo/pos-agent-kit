@@ -14,6 +14,10 @@ Addition to *Body*:
 - Keep the commit message about the functionality: why the change is needed
   and what behavior it changes. Do not mention added or updated tests, list the
   cases they cover, or add a test-coverage summary.
+- Wrap technical names in backticks in the body: models, fields, methods,
+  functions, classes, components, files, XML ids, settings
+  (`pos.order`, `amount_total`, `_compute_price()`, `ProductScreen`).
+  The header stays as it is, with the module name in plain text.
 
 Replaces the bug-fix bullet in *Body*:
 
